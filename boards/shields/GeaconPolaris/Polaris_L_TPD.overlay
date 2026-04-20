@@ -1,24 +1,30 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
-&i2c0 {
-    status = "okay";
-    compatible = "nordic,nrf-twi";
-    pinctrl-0 = <&i2c0_default>;
-    pinctrl-1 = <&i2c0_sleep>;
-    pinctrl-names = "default", "sleep";
-    clock-frequency = <100000>; 
-    
-    glidepoint_L: glidepoint_L@2a {
-            compatible = "cirque,pinnacle";
-            reg = <0x2a>;
-            status = "okay";
-            dr-gpios = <&gpio1 14 (GPIO_ACTIVE_HIGH)>;
-
-            sensitivity = "2x";
-            // sleep;
-            no-taps;
+/ {
+    glidepoint_listener: glidepoint_listener {
+        compatible = "zmk,input-listener";
+        status = "okay";
+        device = <&glidepoint_L>;
+        
+        layer0 {
+            layers = <0>;
+            // input-processors = <
+            //     &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP)
+            //     &zip_xy_scaler 1 4
+            //     &zip_xy_to_scroll_mapper
+            // >;
+            input-processors = <&scroll_runtime_input_processor>;
         };
+
+        // layer1 {
+        //     layers = <1>;
+        //     input-processors = <
+        //         &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP)
+        //         &zip_xy_to_scroll_mapper
+        //     >;
+        // };
+    };
 };
 
 &pinctrl {    
@@ -40,27 +46,22 @@
     };
 };
 
-/ {
-    glidepoint_listener: glidepoint_listener {
-        compatible = "zmk,input-listener";
-        status = "okay";
-        device = <&glidepoint_L>;
-        
-        layer0 {
-            layers = <0>;
-            input-processors = <
-                &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP)
-                &zip_xy_scaler 1 4
-                &zip_xy_to_scroll_mapper
-            >;
-        };
+&i2c0 {
+    status = "okay";
+    compatible = "nordic,nrf-twi";
+    pinctrl-0 = <&i2c0_default>;
+    pinctrl-1 = <&i2c0_sleep>;
+    pinctrl-names = "default", "sleep";
+    clock-frequency = <100000>; 
+    
+    glidepoint_L: glidepoint_L@2a {
+            compatible = "cirque,pinnacle";
+            reg = <0x2a>;
+            status = "okay";
+            dr-gpios = <&gpio1 14 (GPIO_ACTIVE_HIGH)>;
 
-        layer1 {
-            layers = <1>;
-            input-processors = <
-                &zip_xy_transform (INPUT_TRANSFORM_XY_SWAP)
-                &zip_xy_to_scroll_mapper
-            >;
+            sensitivity = "2x";
+            // sleep;
+            no-taps;
         };
-    };
 };
