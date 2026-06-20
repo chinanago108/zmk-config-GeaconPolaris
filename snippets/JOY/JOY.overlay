@@ -64,12 +64,12 @@
 &left_encoder {
     a-gpios = ENCODER_A_GPIOS;
     b-gpios = ENCODER_B_GPIOS;
-    steps = <3>;
+    steps = <24>;
     status = "okay";
 };
 
 &sensors {
-    triggers-per-rotation = <1>;
+    triggers-per-rotation = <10>;
 };
 
 &scroll_runtime_input_processor_l {
